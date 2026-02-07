@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyeux Anniversaire !</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* TOUT LE CSS ICI - Copie exactement le même CSS que tu as */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 800px;
+            height: 600px;
+            position: relative;
+            background: #0f3460;
+            border: 8px solid #1a1a2e;
+            overflow: hidden;
+        }
+        
+        .pixel-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .title {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff9a00;
+            text-shadow: 4px 4px 0 #8b0000;
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+        
+        .name {
+            position: absolute;
+            top: 90px;
+            width: 100%;
+            text-align: center;
+            font-size: 42px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 4px 4px 0 #0000ff;
+            letter-spacing: 3px;
+            z-index: 10;
+        }
+        
+        .cake {
+            position: absolute;
+            left: 200px;
+            bottom: 150px;
+            width: 160px;
+            height: 120px;
+            cursor: pointer;
+            filter: drop-shadow(0 8px 0 rgba(0,0,0,0.3));
+        }
+        
+        .cake-base {
+            position: absolute;
+            bottom: 0;
+            width: 160px;
+            height: 40px;
+            background: #8b4513;
+            border: 4px solid #654321;
+            border-radius: 4px;
+            box-shadow: inset 0 -8px 0 #654321;
+        }
+        
+        .cake-middle {
+            position: absolute;
+            bottom: 36px;
+            left: 10px;
+            width: 140px;
+            height: 35px;
+            background: #ff69b4;
+            border: 4px solid #ff1493;
+            border-radius: 4px;
+            box-shadow: inset 0 -8px 0 #ff1493;
+        }
+        
+        .cake-top {
+            position: absolute;
+            bottom: 67px;
+            left: 20px;
+            width: 120px;
+            height: 30px;
+            background: #ffb6c1;
+            border: 4px solid #ff69b4;
+            border-radius: 4px;
+        }
+        
+        .cherry {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #ff0000;
+            border: 2px solid #8b0000;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        
+        .cherry-1 { top: -8px; left: 40px; }
+        .cherry-2 { top: -4px; left: 80px; }
+        .cherry-3 { top: -8px; right: 40px; }
+        
+        .candle {
+            position: absolute;
+            bottom: 97px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 24px;
+            background: #ffff00;
+            border: 2px solid #ffa500;
+        }
+        
+        .flame {
+            position: absolute;
+            bottom: 121px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 16px;
+            background: #ff4500;
+            border: 2px solid #ff0000;
+            border-radius: 50% 50% 20% 20%;
+        }
+        
+        .cat {
+            position: absolute;
+            right: 200px;
+            bottom: 150px;
+            width: 96px;
+            height: 96px;
+            cursor: pointer;
+            filter: drop-shadow(0 8px 0 rgba(0,0,0,0.3));
+        }
+        
+        .cat-body {
+            position: absolute;
+            bottom: 0;
+            width: 64px;
+            height: 48px;
+            background: #ffa500;
+            border: 4px solid #ff8c00;
+            border-radius: 8px 8px 4px 4px;
+            left: 16px;
+        }
+        
+        .cat-head {
+            position: absolute;
+            bottom: 32px;
+            width: 64px;
+            height: 64px;
+            background: #ffa500;
+            border: 4px solid #ff8c00;
+            border-radius: 50%;
+            left: 16px;
+        }
+        
+        .cat-ear {
+            position: absolute;
+            top: -8px;
+            width: 12px;
+            height: 16px;
+            background: #ffa500;
+            border: 4px solid #ff8c00;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .cat-ear.left {
+            left: 8px;
+            transform: rotate(-10deg);
+        }
+        
+        .cat-ear.right {
+            right: 8px;
+            transform: rotate(10deg);
+        }
+        
+        .cat-eye {
+            position: absolute;
+            top: 20px;
+            width: 8px;
+            height: 12px;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 4px;
+        }
+        
+        .cat-eye.left {
+            left: 16px;
+        }
+        
+        .cat-eye.right {
+            right: 16px;
+        }
+        
+        .cat-mouth {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 6px;
+            background: #ff4500;
+            border: 2px solid #8b0000;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .cat-tail {
+            position: absolute;
+            bottom: 12px;
+            right: -12px;
+            width: 32px;
+            height: 12px;
+            background: #ffa500;
+            border: 4px solid #ff8c00;
+            border-radius: 6px;
+        }
+        
+        .speech-bubble {
+            position: absolute;
+            top: -60px;
+            right: -10px;
+            background: white;
+            padding: 8px;
+            border: 4px solid black;
+            font-size: 14px;
+            font-weight: bold;
+            color: black;
+            width: 140px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        
+        .speech-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ff9a00;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 10;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 12px;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 10;
+        }
+        
+        @media (max-width: 850px) {
+            .game-container {
+                width: 95vw;
+                height: 70vh;
+            }
+            .title { font-size: 24px; }
+            .name { font-size: 28px; }
+            .cake { left: 50px; transform: scale(0.7); }
+            .cat { right: 50px; transform: scale(0.7); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas class="pixel-canvas" id="pixelCanvas"></canvas>
+        <div class="title">JOYEUX ANNIVERSAIRE</div>
+        <!-- ICI TU CHANGES LE NOM -->
+        <div class="name" id="personName">MON AMOUR !</div>
+        <div class="score">SCORE: <span id="score">0</span></div>
+        
+        <div class="cake" id="cake">
+            <div class="cake-base"></div>
+            <div class="cake-middle"></div>
+            <div class="cake-top"></div>
+            <div class="cherry cherry-1"></div>
+            <div class="cherry cherry-2"></div>
+            <div class="cherry cherry-3"></div>
+            <div class="candle"></div>
+            <div class="flame" id="flame"></div>
+        </div>
+        
+        <div class="cat" id="cat">
+            <div class="cat-body"></div>
+            <div class="cat-head">
+                <div class="cat-ear left"></div>
+                <div class="cat-ear right"></div>
+                <div class="cat-eye left"></div>
+                <div class="cat-eye right"></div>
+                <div class="cat-mouth"></div>
+            </div>
+            <div class="cat-tail" id="cat-tail"></div>
+            <div class="speech-bubble" id="speech-bubble">JOYEUX ANNIV<br>MON AMOUR !</div>
+        </div>
+        
+        <div class="controls">
+            <div>CLIC: GÂTEAU (C) | CHAT (ESPACE)</div>
+            <div>OBJECTIF: 100 POINTS</div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION - CHANGE LE NOM ICI
+        const person_name = "Mon Amour";  // ← CHANGE ICI
+        const catMessages = [
+            `JOYEUX ANNIVERSAIRE ${person_name.toUpperCase()}!`,
+            `BON ANNIVERSAIRE ${person_name.toUpperCase()}!`,
+            "MIAOU! 🎉",
+            "PLEIN DE BONHEUR!",
+            "BONNE FÊTE! 🎂",
+            "MEILLEURS VŒUX!",
+            "QUE DU BONHEUR!"
+        ];
+        
+        // Mise à jour du nom affiché
+        document.getElementById('personName').textContent = person_name.toUpperCase() + "!";
+        document.querySelector('#speech-bubble').innerHTML = `JOYEUX ANNIV<br>${person_name.toUpperCase()}!`;
+        
+        class PixelParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('pixelCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.canvas.width = 800;
+                this.canvas.height = 600;
+                this.ctx.imageSmoothingEnabled = false;
+                this.particles = [];
+                this.stars = [];
+                this.lastTime = 0;
+                this.initStars();
+                this.animate();
+            }
+            
+            initStars() {
+                for (let i = 0; i < 50; i++) {
+                    this.stars.push({
+                        x: Math.random() * 800,
+                        y: Math.random() * 400,
+                        size: Math.random() * 3 + 1,
+                        speed: Math.random() * 0.5 + 0.2,
+                        opacity: Math.random() * 0.5 + 0.3
+                    });
+                }
+            }
+            
+            createParticles(x, y, count, color, size = 4) {
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.floor(x),
+                        y: Math.floor(y),
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: (Math.random() - 0.5) * 6 - 3,
+                        life: 1,
+                        color: color,
+                        size: Math.floor(Math.random() * size) + 2,
+                        gravity: 0.2
+                    });
+                }
+            }
+            
+            updateParticles(deltaTime) {
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += p.gravity;
+                    p.life -= 0.02;
+                    
+                    if (p.life <= 0 || p.y > 600 || p.x < 0 || p.x > 800) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+                
+                for (const star of this.stars) {
+                    star.x += star.speed;
+                    if (star.x > 800) {
+                        star.x = 0;
+                        star.y = Math.random() * 400;
+                    }
+                }
+            }
+            
+            drawParticles() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = 'rgba(15, 52, 96, 0.2)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                for (const star of this.stars) {
+                    this.ctx.globalAlpha = star.opacity;
+                    this.ctx.fillStyle = '#ffffff';
+                    this.ctx.fillRect(Math.floor(star.x), Math.floor(star.y), star.size, star.size);
+                }
+                
+                for (const p of this.particles) {
+                    this.ctx.globalAlpha = p.life;
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.fillRect(Math.floor(p.x - p.size/2), Math.floor(p.y - p.size/2), p.size, p.size);
+                    this.ctx.strokeStyle = '#000';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(Math.floor(p.x - p.size/2), Math.floor(p.y - p.size/2), p.size, p.size);
+                }
+                
+                this.ctx.globalAlpha = 1;
+            }
+            
+            animate(time = 0) {
+                const deltaTime = time - this.lastTime || 0;
+                this.lastTime = time;
+                this.updateParticles(deltaTime);
+                this.drawParticles();
+                requestAnimationFrame((t) => this.animate(t));
+            }
+        }
+        
+        class BirthdayGame {
+            constructor() {
+                this.score = 0;
+                this.candlesLit = true;
+                this.catMessages = catMessages;
+                this.particleSystem = new PixelParticleSystem();
+                this.init();
+            }
+            
+            init() {
+                this.setupCake();
+                this.setupCat();
+                this.setupKeyboard();
+                this.setupAnimations();
+                this.showWelcome();
+            }
+            
+            setupCake() {
+                const cake = document.getElementById('cake');
+                const flame = document.getElementById('flame');
+                
+                let flameFrame = 0;
+                setInterval(() => {
+                    if (!this.candlesLit) return;
+                    flameFrame = (flameFrame + 1) % 3;
+                    const heights = [14, 16, 14];
+                    const colors = ['#ff4500', '#ff5500', '#ff4500'];
+                    flame.style.height = heights[flameFrame] + 'px';
+                    flame.style.background = colors[flameFrame];
+                    flame.style.borderColor = colors[flameFrame];
+                }, 150);
+                
+                cake.addEventListener('click', () => {
+                    this.candlesLit = !this.candlesLit;
+                    if (this.candlesLit) {
+                        flame.style.display = 'block';
+                        this.particleSystem.createParticles(280, 310, 12, '#ff4500', 6);
+                        this.addScore(5);
+                    } else {
+                        flame.style.display = 'none';
+                        this.particleSystem.createParticles(280, 330, 8, '#888888', 4);
+                    }
+                    this.animateElement(cake, 'bounce');
+                    this.jumpCherries();
+                    this.playSound(800, 300, 'square');
+                });
+            }
+            
+            setupCat() {
+                const cat = document.getElementById('cat');
+                const speechBubble = document.getElementById('speech-bubble');
+                const catTail = document.getElementById('cat-tail');
+                
+                let walkFrame = 0;
+                setInterval(() => {
+                    walkFrame = (walkFrame + 1) % 8;
+                    const positions = [0, 1, 2, 1, 0, -1, -2, -1];
+                    cat.style.transform = `translateX(${positions[walkFrame]}px)`;
+                    const eyes = document.querySelectorAll('.cat-eye');
+                    if (walkFrame === 4) {
+                        eyes.forEach(eye => eye.style.height = '4px');
+                    } else {
+                        eyes.forEach(eye => eye.style.height = '12px');
+                    }
+                }, 120);
+                
+                cat.addEventListener('click', () => {
+                    const randomMessage = this.catMessages[Math.floor(Math.random() * this.catMessages.length)];
+                    speechBubble.innerHTML = randomMessage;
+                    speechBubble.classList.add('show');
+                    setTimeout(() => speechBubble.classList.remove('show'), 2000);
+                    this.animateElement(cat, 'jump');
+                    this.wagTail(catTail);
+                    this.createCoins(550, 280);
+                    this.addScore(10);
+                    this.playSound(400, 600, 'triangle');
+                    this.particleSystem.createParticles(550, 280, 15, '#ffff00', 4);
+                });
+            }
+            
+            setupKeyboard() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        document.getElementById('cat').click();
+                        e.preventDefault();
+                    }
+                    if (e.code === 'KeyC') {
+                        document.getElementById('cake').click();
+                    }
+                    if (e.code === 'KeyR') {
+                        this.resetGame();
+                    }
+                });
+            }
+            
+            setupAnimations() {
+                setInterval(() => {
+                    if (Math.random() > 0.8) {
+                        const x = 100 + Math.random() * 600;
+                        const y = 100 + Math.random() * 300;
+                        this.particleSystem.createParticles(x, y, 3, '#ffff00', 3);
+                    }
+                }, 2000);
+                this.animateTitle();
+            }
+            
+            animateElement(element, type) {
+                if (type === 'bounce') {
+                    const frames = ['translateY(0px)', 'translateY(-20px)', 'translateY(0px)'];
+                    let frame = 0;
+                    const interval = setInterval(() => {
+                        element.style.transform = frames[frame];
+                        frame++;
+                        if (frame >= frames.length) {
+                            clearInterval(interval);
+                            element.style.transform = '';
+                        }
+                    }, 100);
+                } else if (type === 'jump') {
+                    const frames = ['translateY(0px)', 'translateY(-30px)', 'translateY(0px)'];
+                    let frame = 0;
+                    const interval = setInterval(() => {
+                        element.style.transform = frames[frame];
+                        frame++;
+                        if (frame >= frames.length) {
+                            clearInterval(interval);
+                            element.style.transform = '';
+                        }
+                    }, 150);
+                }
+            }
+            
+            wagTail(tail) {
+                const angles = [0, 20, 40, 20, 0, -20, -40, -20];
+                let frame = 0;
+                const interval = setInterval(() => {
+                    tail.style.transform = `rotate(${angles[frame]}deg)`;
+                    frame++;
+                    if (frame >= angles.length) {
+                        clearInterval(interval);
+                        tail.style.transform = '';
+                    }
+                }, 80);
+            }
+            
+            jumpCherries() {
+                const cherries = document.querySelectorAll('.cherry');
+                const jumps = ['translateY(-12px)', 'translateY(-16px)', 'translateY(-12px)', 'translateY(0px)'];
+                cherries.forEach((cherry, index) => {
+                    let frame = 0;
+                    const interval = setInterval(() => {
+                        cherry.style.transform = jumps[frame];
+                        frame++;
+                        if (frame >= jumps.length) {
+                            clearInterval(interval);
+                            cherry.style.transform = '';
+                        }
+                    }, 80 + index * 40);
+                });
+            }
+            
+            createCoins(x, y) {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const coin = document.createElement('div');
+                        coin.style.position = 'absolute';
+                        coin.style.left = (x + i * 15) + 'px';
+                        coin.style.top = y + 'px';
+                        coin.style.width = '8px';
+                        coin.style.height = '8px';
+                        coin.style.background = '#ffff00';
+                        coin.style.border = '2px solid #ffa500';
+                        coin.style.zIndex = '5';
+                        document.querySelector('.game-container').appendChild(coin);
+                        let posY = y;
+                        let velocity = -5;
+                        const animate = () => {
+                            velocity += 0.3;
+                            posY += velocity;
+                            coin.style.top = posY + 'px';
+                            coin.style.transform = `rotate(${posY}deg)`;
+                            coin.style.opacity = Math.min(1, (400 - (posY - y)) / 200);
+                            if (posY < 600) {
+                                requestAnimationFrame(animate);
+                            } else {
+                                coin.remove();
+                            }
+                        };
+                        animate();
+                    }, i * 150);
+                }
+            }
+            
+            addScore(points) {
+                this.score += points;
+                document.getElementById('score').textContent = this.score;
+                if (this.score % 25 === 0) {
+                    this.particleSystem.createParticles(400, 200, 25, '#ff9a00', 6);
+                    this.playSound(500, 900, 'sawtooth');
+                }
+                if (this.score >= 100) {
+                    this.winGame();
+                }
+            }
+            
+            playSound(freq1, freq2, type) {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.frequency.setValueAtTime(freq1, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(freq2, audioContext.currentTime + 0.15);
+                    oscillator.type = type;
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.25);
+                } catch (e) {}
+            }
+            
+            animateTitle() {
+                const title = document.querySelector('.title');
+                const name = document.querySelector('.name');
+                let colorIndex = 0;
+                const colors = ['#ff9a00', '#00ffff', '#ff69b4', '#ffff00'];
+                setInterval(() => {
+                    colorIndex = (colorIndex + 1) % colors.length;
+                    title.style.color = colors[colorIndex];
+                    name.style.color = colors[(colorIndex + 1) % colors.length];
+                    title.style.textShadow = `4px 4px 0 ${this.darkenColor(colors[colorIndex])}`;
+                    name.style.textShadow = `4px 4px 0 ${this.darkenColor(colors[(colorIndex + 1) % colors.length])}`;
+                }, 1000);
+            }
+            
+            darkenColor(color) {
+                if (color === '#ff9a00') return '#8b0000';
+                if (color === '#00ffff') return '#0000ff';
+                if (color === '#ff69b4') return '#8b0045';
+                return '#000000';
+            }
+            
+            showWelcome() {
+                setTimeout(() => {
+                    this.particleSystem.createParticles(200, 320, 20, '#ff69b4', 5);
+                    this.particleSystem.createParticles(550, 320, 20, '#ffa500', 5);
+                    const speechBubble = document.getElementById('speech-bubble');
+                    speechBubble.innerHTML = "CLIQUE SUR MOI!";
+                    speechBubble.classList.add('show');
+                    setTimeout(() => speechBubble.classList.remove('show'), 3000);
+                }, 1000);
+            }
+            
+            winGame() {
+                this.particleSystem.createParticles(400, 300, 50, '#ffff00', 8);
+                const speechBubble = document.getElementById('speech-bubble');
+                speechBubble.innerHTML = "🎉 GAGNÉ! 100 POINTS! 🎉";
+                speechBubble.classList.add('show');
+                setTimeout(() => speechBubble.classList.remove('show'), 5000);
+                this.playSound(300, 1200, 'square');
+            }
+            
+            resetGame() {
+                this.score = 0;
+                document.getElementById('score').textContent = '0';
+                this.candlesLit = true;
+                document.getElementById('flame').style.display = 'block';
+                this.particleSystem.createParticles(400, 300, 20, '#00ff00', 6);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new BirthdayGame();
+        });
+    </script>
+</body>
+</html>
